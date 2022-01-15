@@ -4,5 +4,5 @@ from tortoise import fields
 
 class User(Model):
     id = fields.IntField(pk=True)
-    xp = fields.IntField()
-    level = fields.IntField()
+    xp = fields.IntField(default=0)
+    level = fields.IntField(default=0)
