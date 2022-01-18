@@ -1,4 +1,4 @@
-from bot.util.db import db
+from bot.db import db
 
 
 class Saveable:

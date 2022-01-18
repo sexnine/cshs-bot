@@ -1,4 +1,4 @@
-from bot.util.db import User, db
+from bot.db import User
 from discord.ext import commands
 from errors import XPCantBeNegative
 

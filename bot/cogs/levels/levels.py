@@ -1,8 +1,5 @@
 from discord.ext import commands
 import discord
-from bot.util.util import random_id
-from bot.util.config import get_config
-from bot.util.db import User
 from typing import Optional
 
 

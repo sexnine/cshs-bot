@@ -2,9 +2,9 @@ from __future__ import annotations
 from odmantic import Field, Model
 from odmantic import AIOEngine
 from os import getenv
-from typing import Union, Optional
+from typing import Union
 import discord
-from bot.util.db_util import Saveable
+from bot.db.util import Saveable
 
 
 db = AIOEngine(getenv("MONGO_URI"))
