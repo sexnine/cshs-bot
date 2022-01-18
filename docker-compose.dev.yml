@@ -3,11 +3,11 @@ version: "3.3"
 services:
   cshs-bot:
     build:
-      context: ./cshs-bot/
-      dockerfile: cshs-bot/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     container_name: cshs-bot
     volumes:
-    -./config:/app/config
+    - ./config:/app/config
     depends_on:
       - mongo
     env_file:
