@@ -1,5 +1,6 @@
-from bot.util.models import User
+from bot.util.db import User, db
 from discord.ext import commands
+from errors import XPCantBeNegative
 
 
 class LevelsApi:
@@ -8,19 +9,17 @@ class LevelsApi:
 
     # ignore these errors for now, they will be using self
     async def add_xp(self, user_id: int, xp: int) -> User:
-        user, was_created = await User.get_or_create(id=user_id, defaults={"xp": xp if xp > 0 else 0})
-        if not was_created:
-            user.xp = user.xp + xp
-            await user.save()
+        user = await User.get(id=user_id)
+        user.xp += xp
+        if user.xp < 0:
+            raise XPCantBeNegative
+        await user.save()
         return user
 
     async def set_xp(self, user_id: int, xp: int) -> User:
-        user, _ = await User.update_or_create(id=user_id, defaults={xp: xp})
+        user = User(id=user_id, xp=xp)
+        await user.save()
         return user
-
-    async def get_xp(self, user_id: int) -> int:
-        user, _ = await User.get_or_create(id=user_id, defaults={"xp": 0})
-        return user.xp
 
     async def _refresh_level(self, user_id: int):
         # TODO

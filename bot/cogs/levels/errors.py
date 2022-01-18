@@ -1,0 +1,2 @@
+class XPCantBeNegative(Exception):
+    pass
