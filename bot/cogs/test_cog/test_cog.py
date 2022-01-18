@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 from bot.util.util import random_id
 from bot.util.config import get_config
-from bot.util.models import User
+# from bot.util.models import User
 from datetime import datetime
 import pytz
 
@@ -19,11 +19,12 @@ class TestCog(commands.Cog):
 
     @commands.command(name="givexp")
     async def test2_cmd(self, ctx: commands.Context, xp: int):
-        user, was_created = await User.get_or_create(id=ctx.author.id, defaults={"xp": xp})
-        if not was_created:
-            user.xp = user.xp + xp
-            await user.save()
-        await ctx.reply(f"your xp is now {user.xp}")
+        # user, was_created = await User.get_or_create(id=ctx.author.id, defaults={"xp": xp})
+        # if not was_created:
+        #     user.xp = user.xp + xp
+        #     await user.save()
+        # await ctx.reply(f"your xp is now {user.xp}")
+        pass
 
     @commands.is_owner()
     @commands.command(name="count_msgs")
