@@ -1,0 +1,26 @@
+version: "3.3"
+
+services:
+  cshs-bot:
+    build:
+      context: ./cshs-bot/
+      dockerfile: cshs-bot/Dockerfile
+    container_name: cshs-bot
+    volumes:
+    -./config:/app/config
+    depends_on:
+      - mongo
+    env_file:
+      - bot.env
+
+  mongo:
+    container_name: cshs-mongo
+    image: mongo
+    volumes:
+    - ./dev/mongo_data/db:/data/db
+    - ./dev/mongo_data/configdb:/data/configdb
+    ports:
+    - ${MONGO_PORT}:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}

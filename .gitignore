@@ -1,8 +1,10 @@
 .idea/
 config/*.yml
 !config/.keep
-data/*
-!data/.keep
+.env
+bot.env
+dev/mongo_data/*
+!dev/mongo_data/.keep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
