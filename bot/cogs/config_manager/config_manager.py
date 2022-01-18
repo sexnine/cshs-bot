@@ -1,5 +1,4 @@
 # Used for managing the config for the bot and cogs
-import discord
 from discord.ext import commands
 from bot.util.config import get_config, ConfigDoesntExistError, ConfigNotLoadedError
 

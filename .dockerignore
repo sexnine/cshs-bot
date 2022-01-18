@@ -1,1 +1,12 @@
-config_examples/*
+**/*.yml
+**/*.md
+**/.keep
+**/*.env
+.git/
+config/
+venv/
+dev/
+.idea/
+.gitignore
+.gitattributes
+**/__pycache__
