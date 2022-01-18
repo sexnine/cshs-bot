@@ -1,6 +1,6 @@
 from bot.db import User
 from discord.ext import commands
-from errors import XPCantBeNegative
+from .errors import XPCantBeNegative
 
 
 class LevelsApi:

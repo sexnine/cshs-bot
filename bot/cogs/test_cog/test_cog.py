@@ -69,6 +69,5 @@ class TestCog(commands.Cog):
         await ctx.message.add_reaction("👌")
 
 
-
 def setup(bot):
     bot.add_cog(TestCog(bot))

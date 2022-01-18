@@ -1,9 +1,9 @@
 from discord.ext import commands
 import discord
 from typing import Optional
-from util import get_rank_card
-from api import LevelsApi
-from errors import XPCantBeNegative
+from .util import get_rank_card
+from .api import LevelsApi
+from .errors import XPCantBeNegative
 from bot.util import embed_msg, MsgStatus
 
 
@@ -33,7 +33,8 @@ class Levels(commands.Cog):
         try:
             user_info = await self.api.add_xp(user.id, xp)
         except XPCantBeNegative:
-            await ctx.reply(embed=embed_msg(f"You can't set {user.mention}'s xp to a negative number.", MsgStatus.ERROR))
+            await ctx.reply(
+                embed=embed_msg(f"You can't set {user.mention}'s xp to a negative number.", MsgStatus.ERROR))
             return
 
         await ctx.reply(embed=embed_msg(f"Set {user.mention}'s xp to `{user_info.xp}`."))
@@ -54,3 +55,7 @@ class Levels(commands.Cog):
         # TODO: checks, use config
         if not message.author.bot:
             await self.api.add_xp(message.author.id, 50)
+
+
+def setup(bot):
+    bot.add_cog(Levels(bot))
