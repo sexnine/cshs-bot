@@ -12,6 +12,7 @@ async def get_rank_card(user: discord.Member) -> RankCard:
                                current_xp=user_info.xp,
                                next_level_xp=user_info.next_level_xp,
                                previous_level_xp=user_info.previous_level_xp,
+                               level=user_info.level,
                                rank=None)  # TODO: rank
     return card
 

@@ -34,7 +34,7 @@ class Levels(commands.Cog):
     @xp_cmd.command(name="set")
     async def set_xp_cmd(self, ctx: commands.Context, user: discord.Member, xp: int):
         try:
-            user_info = await self.api.add_xp(user.id, xp)
+            user_info = await self.api.set_xp(user.id, xp)
         except XPCantBeNegative:
             await ctx.reply(
                 embed=embed_msg(f"You can't set {user.mention}'s xp to a negative number.", MsgStatus.ERROR))
@@ -55,9 +55,9 @@ class Levels(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        # TODO: checks, use config
+        # TODO: checks
         if not message.author.bot:
-            await self.api.add_xp(message.author.id, 50)
+            await self.api.add_xp(message.author.id, self.config.get("xp_per_message"))
 
     async def on_level_up(self, user: User, old_level: int):
         print(f"{user.id} leveled up to {user.level} from {old_level}")
