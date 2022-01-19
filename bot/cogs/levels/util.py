@@ -25,7 +25,7 @@ class LevelUtil:
 
     async def set_level(self, user: User, force_calculate: bool = False) -> User:
         old_level = user.level
-        if user.xp > user.next_level_xp or force_calculate:
+        if user.xp >= user.next_level_xp or force_calculate:
             user = await self.calculate_level(user)
             if user.level > old_level:
                 get_event_loop().create_task(self.level_up_callback(user, old_level))

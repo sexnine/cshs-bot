@@ -60,8 +60,12 @@ class Levels(commands.Cog):
             await self.api.add_xp(message.author.id, self.config.get("xp_per_message"))
 
     async def on_level_up(self, user: User, old_level: int):
-        print(f"{user.id} leveled up to {user.level} from {old_level}")
-        # TODO
+        discord_user = self.bot.get_user(user.id)
+        embed = discord.Embed(title="**🎉 LEVEL UP!**", description=f"{discord_user.mention} just reached Level **{user.level}**")
+        embed.add_field(name="Next Level:", value=f"`{user.next_level_xp}`xp")
+        embed.set_thumbnail(url=discord_user.avatar.url)
+
+        await self.bot.get_channel(self.config.get("level_up_channel")).send(embed=embed)
 
 
 def setup(bot):
