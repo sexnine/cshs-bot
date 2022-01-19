@@ -3,6 +3,7 @@ from vacefron import RankCard
 from bot.db import User
 from typing import Callable, Awaitable
 from bot.util import vac
+from asyncio import get_event_loop
 
 
 async def get_rank_card(user: discord.Member) -> RankCard:
@@ -27,7 +28,7 @@ class LevelUtil:
         if user.xp > user.next_level_xp or force_calculate:
             user = await self.calculate_level(user)
             if user.level > old_level:
-                await self.level_up_callback(user, old_level)
+                get_event_loop().create_task(self.level_up_callback(user, old_level))
         return user
 
     async def calculate_level(self, user: User) -> User:
