@@ -5,12 +5,15 @@ from .util import get_rank_card
 from .api import LevelsApi
 from .errors import XPCantBeNegative
 from bot.util import embed_msg, MsgStatus
+from bot.util.config import get_config
+from bot.db import User
 
 
 class Levels(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.api = LevelsApi(bot)
+        self.config = get_config("levels")
+        self.api = LevelsApi(bot, self.config, self.on_level_up)
 
     @commands.command(name="rank", aliases=["r"])
     async def rank_cmd(self, ctx: commands.Context, user: Optional[discord.Member]):
@@ -55,6 +58,10 @@ class Levels(commands.Cog):
         # TODO: checks, use config
         if not message.author.bot:
             await self.api.add_xp(message.author.id, 50)
+
+    async def on_level_up(self, user: User, old_level: int):
+        print(f"{user.id} leveled up to {user.level} from {old_level}")
+        # TODO
 
 
 def setup(bot):
