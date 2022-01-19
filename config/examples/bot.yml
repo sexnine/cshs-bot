@@ -1,2 +1,2 @@
 prefixes: ["-", "!"]
-cogs: ["levels"]
+cogs: ["levels", "misc"]
