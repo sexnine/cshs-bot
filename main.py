@@ -19,17 +19,4 @@ for cog in cogs:
 async def on_ready():
     print("Bot ready")
 
-@bot.event
-async def on_user_join(member):
-    try:
-        channel = discord.utils.get(bot.guild.text_channels, name="👋-welcome")
-        rules = discord.utils.get(bot.guild.text_channels, name="📃-rules")
-        try:
-            value=f"Welcome {member.mention} to {member.guild.name}' Discord server! Check out our rules over at {rules.mention} and have a nice stay!"
-            await channel.send(value)
-        except Exception as e:
-            raise e
-    except Exception as e:
-        raise e
-
 bot.run(os.getenv("DISCORD_TOKEN"))
