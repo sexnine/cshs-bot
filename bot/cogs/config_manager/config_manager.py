@@ -9,6 +9,7 @@ class ConfigManager(commands.Cog):
         self.bot = bot
 
     @commands.group(name="config")
+    @commands.is_owner()
     async def cmd(self, ctx: commands.Context):
         pass
 
