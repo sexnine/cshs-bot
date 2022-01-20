@@ -1,3 +1,4 @@
+import discord
 import yaml
 import os
 
@@ -49,3 +50,8 @@ def get_config(identifier: str, create_new_file_if_absent: bool = True, load_if_
         else:
             raise ConfigNotLoadedError
     return config
+
+
+def get_config_discord_file(identifier: str) -> discord.File:
+    path = f"./config/{identifier}.yml"
+    return discord.File(path, filename=f"{identifier}.yml")
