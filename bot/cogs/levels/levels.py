@@ -60,7 +60,7 @@ class Levels(commands.Cog):
                 message = response.last_message_sent
                 await message.edit(view=None)
 
-    # TODO: perms
+    @commands.is_owner()
     @commands.group(name="xp")
     async def xp_cmd(self, ctx: commands.Context):
         pass
