@@ -38,7 +38,6 @@ class Levels(commands.Cog):
         conversation_ongoing = True
         page = 0
         user_count = await User.find(User.xp > 0).count()
-        print(user_count)
 
         while conversation_ongoing:
             embed = discord.Embed(title="🏆 Leaderboard")
