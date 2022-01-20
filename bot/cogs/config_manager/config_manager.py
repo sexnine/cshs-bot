@@ -51,3 +51,17 @@ class ConfigManager(commands.Cog):
         if not name:
             await ctx.reply("You must specify a config")
             return
+
+        attachments = ctx.message.attachments
+        if len(attachments) != 1:
+            await ctx.reply("Please send 1 file with your message.")
+            return
+
+        file = attachments[0]
+        path = f"./config/{name}.yml"
+        await file.save(path)
+        await ctx.reply(f"Saved to `{path}`")
+
+
+def setup(bot):
+    bot.add_cog(ConfigManager(bot))
