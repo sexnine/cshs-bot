@@ -24,6 +24,7 @@ I would recommend running the python code in your env and having only the MongoD
 Copy `.example.env` to `.env` and change any of the fields if you wish. 
 
 To start it: `docker-compose -f docker-compose.dev.yml up mongo`
+
 To stop it: `docker-compose -f docker-compose.dev.yml down mongo`
 
 #### Using docker for both the bot and MongoDB
@@ -32,6 +33,7 @@ Copy `.example.env` to `.env` and change any of the fields if you wish.
 Copy `bot.example.env` to `bot.env` and fill in the required fields.
 
 To start them: `docker-compose -f docker-compose.dev.yml up`
+
 To stop them: `docker-compose -f docker-compose.dev.yml down`
 
 #### Without docker
