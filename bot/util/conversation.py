@@ -1,6 +1,6 @@
 from discord.ext import commands
 import discord
-from typing import Union, Dict
+from typing import Union, Dict, Optional
 import asyncio
 
 from bot.util.util import random_id
@@ -8,21 +8,24 @@ from bot.util.util import random_id
 
 class ConversationResponse:
     def __init__(self, response: Union[discord.Message, discord.Interaction, None] = None, finished: bool = False,
-                 action: str = None):
+                 action: str = None, last_message_sent: discord.Message = None):
         self.response = response
         self.type = type(response) if response else None
         self.finished = finished
         self.action = action
+        self.last_message_sent = last_message_sent
 
 
 class ConversationBuilder:
     def __init__(self, bot: commands.Bot, cancel_button: bool = True, timeout: float = 60.0,
-                 wait_for_message: bool = False, wait_for_interaction: bool = False):
+                 wait_for_message: bool = False, wait_for_interaction: bool = False, edit_last_message: bool = False):
         self.bot = bot
         self.cancel_button = cancel_button
         self.timeout = timeout
         self.wait_for_message = wait_for_message
         self.wait_for_interaction = wait_for_interaction
+        self.edit_last_message = edit_last_message
+        self.last_message = None
 
     @staticmethod
     def _cancel_button() -> discord.ui.Button:
@@ -40,9 +43,9 @@ class ConversationBuilder:
         await ctx.send(content=ctx.author.mention,
                        embed=discord.Embed(description="You didn't respond in time, cancelled.", color=0xff5e5e))
 
-    async def ask(self, ctx: commands.Context, message: str, cancel_button: bool = None,
+    async def ask(self, ctx: commands.Context, message: Optional[str] = None, cancel_button: bool = None,
                   buttons: Dict[str, discord.ui.Button] = None, wait_for_message: bool = None,
-                  wait_for_interaction: bool = None, timeout: float = None) -> ConversationResponse:
+                  wait_for_interaction: bool = None, timeout: float = None, edit_last_message: bool = None, embed: discord.Embed = None) -> ConversationResponse:
         def check_is_msg_response(m: discord.Message) -> bool:
             return m.author.id == ctx.author.id and m.channel.id == ctx.channel.id
 
@@ -63,6 +66,8 @@ class ConversationBuilder:
             timeout = self.timeout
         if cancel_button:
             buttons["cancel"] = self._cancel_button()
+        if edit_last_message is None:
+            edit_last_message = self.edit_last_message
 
         view = None
         interactions = {}
@@ -74,8 +79,12 @@ class ConversationBuilder:
                 interactions[button.custom_id] = action
                 view.add_item(button)
 
-        embed = discord.Embed(description=message)
-        await ctx.send(content=ctx.author.mention, embed=embed, view=view)
+        embed = embed or discord.Embed(description=message)
+        message_kwargs = {"content": ctx.author.mention, "embed": embed, "view": view}
+        if edit_last_message and self.last_message:
+            await self.last_message.edit(**message_kwargs)
+        else:
+            self.last_message = await ctx.send(**message_kwargs)
 
         result = None
         if wait_for_message and wait_for_interaction:
@@ -91,7 +100,7 @@ class ConversationBuilder:
             for task in done_tasks:
                 result = await task
         else:
-            check_func = check_is_msg_response if wait_for_message else check_is_msg_response
+            check_func = check_is_msg_response if wait_for_message else check_is_interaction_reply
             event_name = "message" if wait_for_message else "interaction"
             try:
                 result = await self.bot.wait_for(event_name, check=check_func, timeout=timeout)
@@ -105,4 +114,4 @@ class ConversationBuilder:
             await self._send_cancelled_msg(ctx)
             finished = True
 
-        return ConversationResponse(response=result, finished=finished, action=action)
+        return ConversationResponse(response=result, finished=finished, action=action, last_message_sent=self.last_message)

@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord
+from discord.ui import Button
 from typing import Optional
 from .util import get_rank_card
 from .api import LevelsApi
@@ -7,6 +8,7 @@ from .errors import XPCantBeNegative
 from bot.util import embed_msg, MsgStatus
 from bot.util.config import get_config
 from bot.db import User
+from bot.util.conversation import ConversationBuilder
 
 
 class Levels(commands.Cog):
@@ -24,7 +26,40 @@ class Levels(commands.Cog):
 
     @commands.command(name="leaderboard", aliases=["lb"])
     async def leaderboard_cmd(self, ctx: commands.Context):
-        pass
+        items_per_page = 2
+        query = User.find(User.xp > 0).sort().limit(items_per_page)
+        conversation = ConversationBuilder(self.bot, cancel_button=False, timeout=5.0, wait_for_interaction=True, edit_last_message=True)
+
+        async def do_nothing(_):
+            pass
+
+        conversation._send_timeout_msg = do_nothing
+
+        conversation_ongoing = True
+        page = 0
+        user_count = await User.find(User.xp > 0).count()
+        print(user_count)
+
+        while conversation_ongoing:
+            embed = discord.Embed(title="🏆 Leaderboard")
+            users = await query.skip(page * items_per_page).to_list()
+            embed.set_footer(text=f"Requested by {ctx.author} | Page {page + 1}")
+
+            for i, user in enumerate(users):
+                name = self.bot.get_user(user.id).name or "Unknown User"
+                embed.add_field(name=f"#{page*items_per_page+i+1}: {name}", value=f"Level: `{user.level}`\nTotal XP: `{user.xp}`")
+
+            response = await conversation.ask(ctx, embed=embed, buttons={"prev": Button(label="Previous Page", disabled=page == 0),
+                                                                         "next": Button(label="Next Page", disabled=user_count <= (page + 1) * items_per_page)})
+
+            if response.action == "prev":
+                page -= 1
+            elif response.action == "next":
+                page += 1
+            elif response.finished:
+                conversation_ongoing = False
+                message = response.last_message_sent
+                await message.edit(view=None)
 
     # TODO: perms
     @commands.group(name="xp")
@@ -45,7 +80,8 @@ class Levels(commands.Cog):
     @xp_cmd.command(name="add")
     async def add_xp_cmd(self, ctx: commands.Context, user: discord.Member, xp: int):
         if xp <= 0:
-            await ctx.reply(embed=embed_msg(f"You can't add negative XP, please use `set` instead of `add`", MsgStatus.ERROR))
+            await ctx.reply(
+                embed=embed_msg(f"You can't add negative XP, please use `set` instead of `add`", MsgStatus.ERROR))
             return
 
         user_info = await self.api.add_xp(user.id, xp, True)
@@ -61,7 +97,8 @@ class Levels(commands.Cog):
 
     async def on_level_up(self, user: User, old_level: int):
         discord_user = self.bot.get_user(user.id)
-        embed = discord.Embed(title="**🎉 LEVEL UP!**", description=f"{discord_user.mention} just reached Level **{user.level}**")
+        embed = discord.Embed(title="**🎉 LEVEL UP!**",
+                              description=f"{discord_user.mention} just reached Level **{user.level}**")
         embed.add_field(name="Next Level:", value=f"`{user.next_level_xp}`xp")
         embed.set_thumbnail(url=discord_user.avatar.url)
 
