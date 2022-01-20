@@ -1,4 +1,4 @@
 prefixes: ["-", "!"]
-cogs: ["levels", "misc"]
-webhook_url: [""]
-subreddits: [""] 
+cogs: ["levels", "misc", "discord", "mod"]
+token: ""
+owners: [] # integer only

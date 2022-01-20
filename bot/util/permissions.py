@@ -1,11 +1,19 @@
 import discord
 
-from bot.util import default
+from bot.util import default, config
 from discord.ext import commands
 
+owners = config.get_config("bot").get("owners", [])
+
+def is_owner(ctx):
+    """ checks if the author is one of the owners"""
+    return ctx.author.id in owners
 
 async def check_permissions(ctx, perms, *, check=all):
-
+    """ checks if author has permissions to a permission """
+    if ctx.author.id in owners:
+        return True
+    
     resolved = ctx.channel.permissions_for(ctx.author)
     return check(getattr(resolved, name, None) == value for name, value in perms.items())
 
@@ -30,6 +38,12 @@ async def check_priv(ctx, member):
         if ctx.author.id == ctx.guild.owner.id:
             return False
 
+        # Now permission check
+        if member.id in owners:
+            if ctx.author.id not in owners:
+                return await ctx.send(f"I can't {ctx.command.name} my creator ;-;")
+            else:
+                pass
         if member.id == ctx.guild.owner.id:
             return await ctx.send(f"You can't {ctx.command.name} the owner, lol")
         if ctx.author.top_role == member.top_role:

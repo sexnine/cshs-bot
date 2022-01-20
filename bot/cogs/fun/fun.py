@@ -15,6 +15,7 @@ class Fun(commands.Cog):
     
     @commands.command(aliases=["8ball"])
     async def eightball(self, ctx: commands.Context, *, question: commands.clean_content):
+        """ Consult 8ball to recieve an answer """
         ballresponse = [
             "Yes", "No", "Take a wild guess...", "Very doubtful",
             "Sure", "Without a doubt", "Most likely", "Might be possible",
