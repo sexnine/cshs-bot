@@ -31,12 +31,6 @@ class Misc(commands.Cog):
         rules = discord.utils.get(self.bot.guild.text_channels, name="📃-rules")
         value = f"Welcome {member.mention} to {member.guild.name}' Discord server! Check out our rules over at {rules.mention} and have a nice stay!"
         await channel.send(value)
-    
-    @commands.Cog.listener()
-    async def on_ready(self):
-        activity = discord.Game(name=self.config.get("status", ""))
-        config_activity = self.config.get("activity", "")
-        await self.bot.change_presence(status=config_activity, activity=activity)
 
 
 def setup(bot):
