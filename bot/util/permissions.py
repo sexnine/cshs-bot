@@ -2,13 +2,14 @@ import discord
 
 from bot.util import default, config
 from discord.ext import commands
+from main import bot
 
 owners = config.get_config("bot").get("owners", [])
 
 
-def is_owner(ctx):
+def is_owner(ctx: commands.Context):
     """ checks if the author is one of the owners"""
-    return ctx.author.id in owners
+    return ctx.author.id in owners or ctx.author.id == bot.owner_id
 
 
 async def check_permissions(ctx, perms, *, check=all):
