@@ -36,7 +36,6 @@ async def on_ready():
     print("Bot ready")
 
 try:
-    # bot.run(os.getenv("DISCORD_TOKEN"))
-    bot.run(str(config.get("token", "")))
+    bot.run(os.getenv("DISCORD_TOKEN"))
 except Exception as e:
     print(f"Error when logging in {e}")
