@@ -8,7 +8,7 @@ from bot.util import config
 class Misc(commands.Cog):
     def __init__(self, bot: commands.bot):
         self.bot = bot
-        self.config = config.get_config("bot")
+        self.config = config.get_config("misc")
 
     @commands.command(name="ping")
     async def ping(self, ctx: commands.Context):
@@ -22,15 +22,15 @@ class Misc(commands.Cog):
     @commands.command(name="echo")
     async def echo(self, ctx: commands.Context, *, content: str):
         """ echo! """
-        embed = discord.Embed(title=f"{content}", color=discord.Color.green())
+        embed = discord.Embed(title=content, color=discord.Color.green())
         await ctx.send(embed=embed)
 
     @commands.Cog.listener()
     async def on_user_join(self, member: discord.Member):
-        channel = discord.utils.get(self.bot.guild.text_channels, name="👋-welcome")
-        rules = discord.utils.get(self.bot.guild.text_channels, name="📃-rules")
-        value = f"Welcome {member.mention} to {member.guild.name}' Discord server! Check out our rules over at {rules.mention} and have a nice stay!"
-        await channel.send(value)
+        welcome_channel = member.guild.get_channel(self.config.get("welcome_channel"))
+        rules_channel = member.guild.get_channel(self.config.get("rules_channel"))
+        value = f"Welcome {member.mention} to {member.guild.name}' Discord server! Check out our rules over at {rules_channel.mention} and have a nice stay!"
+        await welcome_channel.send(value)
 
 
 def setup(bot):
