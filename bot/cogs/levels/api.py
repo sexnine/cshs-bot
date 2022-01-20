@@ -1,4 +1,5 @@
-from typing import Callable, Awaitable
+from typing import Callable, Awaitable, Optional
+from beanie.odm.operators.update.general import Inc, Set
 from bot.db import User
 from discord.ext import commands
 from .errors import XPCantBeNegative
@@ -12,14 +13,11 @@ class LevelsApi:
         self.config = config
         self.util = LevelUtil(self.config.get("xp_per_level"), level_up_callback)
 
-    async def add_xp(self, user_id: int, xp: int) -> User:
+    async def add_xp(self, user_id: int, xp: int, return_user: bool = False) -> Optional[User]:
         user = await User.get(user=user_id)
-        user.xp += xp
-        if user.xp < 0:
-            raise XPCantBeNegative
-        user = await self.util.set_level(user)
-        await user.save()
-        return user
+        data_to_set = await self.util.get_level_set(user)
+        await user.update(Inc({User.xp: xp}), Set(data_to_set))
+        return await User.get(user=user_id) if return_user else None
 
     async def set_xp(self, user_id: int, xp: int) -> User:
         user = User(id=user_id, xp=xp)

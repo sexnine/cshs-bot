@@ -1,9 +1,10 @@
 import discord
 from vacefron import RankCard
 from bot.db import User
-from typing import Callable, Awaitable
+from typing import Callable, Awaitable, Optional
 from bot.util import vac
 from asyncio import get_event_loop
+from typing import Tuple, Dict
 
 
 async def get_rank_card(user: discord.Member) -> RankCard:
@@ -24,14 +25,27 @@ class LevelUtil:
         self.level_up_callback = level_up_callback
 
     async def set_level(self, user: User, force_calculate: bool = False) -> User:
-        old_level = user.level
-        if user.xp >= user.next_level_xp or force_calculate:
-            user = await self.calculate_level(user)
-            if user.level > old_level:
-                get_event_loop().create_task(self.level_up_callback(user, old_level))
+        result = await self.get_level(user, force_calculate)
+        if result:
+            user.level, user.next_level_xp, user.previous_level_xp = result
         return user
 
-    async def calculate_level(self, user: User) -> User:
+    async def get_level_set(self, user: User, force_calculate: bool = False) -> Dict:
+        result = await self.get_level(user, force_calculate)
+        if result:
+            lvl, next_level_xp, previous_level_xp = result
+            return {User.level: lvl, User.next_level_xp: next_level_xp, User.previous_level_xp: previous_level_xp}
+        return {}
+
+    async def get_level(self, user: User, force_calculate: bool = False) -> Optional[Tuple[int, int, int]]:
+        if user.xp >= user.next_level_xp or force_calculate:
+            result = await self.calculate_level(user)
+            if result[0] > user.level:
+                get_event_loop().create_task(self.level_up_callback(user, user.level))
+            return result
+        return None
+
+    async def calculate_level(self, user: User) -> Tuple[int, int, int]:
         lvl = 0
         xp = user.xp
 
@@ -40,8 +54,6 @@ class LevelUtil:
                 break
             lvl += 1
 
-        user.level = lvl
-        user.next_level_xp = next_level_xp
-        user.previous_level_xp = next_level_xp - lvl * self.xp_per_level
+        previous_level_xp = next_level_xp - lvl * self.xp_per_level
 
-        return user
+        return lvl, int(next_level_xp), int(previous_level_xp)
