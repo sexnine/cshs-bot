@@ -26,7 +26,7 @@ class Levels(commands.Cog):
 
     @commands.command(name="leaderboard", aliases=["lb"])
     async def leaderboard_cmd(self, ctx: commands.Context):
-        items_per_page = 2
+        items_per_page = 12
         query = User.find(User.xp > 0).sort().limit(items_per_page)
         conversation = ConversationBuilder(self.bot, cancel_button=False, timeout=5.0, wait_for_interaction=True, edit_last_message=True)
 
