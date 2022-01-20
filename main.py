@@ -21,7 +21,8 @@ bot = commands.Bot(
         users=True,
         everyone=False
     ),
-    help_command=DefaultHelpCommand()
+    help_command=DefaultHelpCommand(),
+    owner_ids=config.get("owners")
 )
 
 cogs = config.get("cogs", [])  # TODO: Move into config file
