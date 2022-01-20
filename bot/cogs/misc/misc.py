@@ -2,7 +2,6 @@ import discord
 import time
 
 from discord.ext import commands
-from datetime import datetime as d
 
 
 class Misc(commands.Cog):

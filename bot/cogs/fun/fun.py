@@ -1,4 +1,3 @@
-from ast import Bytes
 import random
 import discord
 import secrets
@@ -7,7 +6,7 @@ import aiohttp
 
 from io import BytesIO
 from discord.ext import commands
-from bot.util import permissions, http, default
+from bot.util import permissions, http
 
 
 class Fun(commands.Cog):

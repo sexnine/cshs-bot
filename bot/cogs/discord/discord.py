@@ -1,5 +1,3 @@
-from ast import Bytes
-from pickle import NONE
 import discord
 
 from io import BytesIO
