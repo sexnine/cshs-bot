@@ -2,11 +2,13 @@ import discord
 import time
 
 from discord.ext import commands
+from bot.util import config
 
 
 class Misc(commands.Cog):
     def __init__(self, bot: commands.bot):
         self.bot = bot
+        self.config = config.get_config("bot")
 
     @commands.command(name="ping")
     async def ping(self, ctx: commands.Context):
@@ -19,6 +21,7 @@ class Misc(commands.Cog):
 
     @commands.command(name="echo")
     async def echo(self, ctx: commands.Context, *, content: str):
+        """ echo! """
         embed = discord.Embed(title=f"{content}", color=discord.Color.green())
         await ctx.send(embed=embed)
 
@@ -28,6 +31,12 @@ class Misc(commands.Cog):
         rules = discord.utils.get(self.bot.guild.text_channels, name="📃-rules")
         value = f"Welcome {member.mention} to {member.guild.name}' Discord server! Check out our rules over at {rules.mention} and have a nice stay!"
         await channel.send(value)
+    
+    @commands.Cog.listener()
+    async def on_ready(self):
+        activity = discord.Game(name=self.config.get("status", ""))
+        config_activity = self.config.get("activity", "")
+        await self.bot.change_presence(status=config_activity, activity=activity)
 
 
 def setup(bot):

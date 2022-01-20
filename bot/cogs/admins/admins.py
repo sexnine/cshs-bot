@@ -9,6 +9,7 @@
     For the love of GOD please dont enable it.(I haven't tested it, yes) -- Nuke ❤️
 """
 
+from asyncio import subprocess
 import time
 import aiohttp
 import discord
@@ -17,7 +18,10 @@ import os
 import sys
 
 from discord.ext import commands
-from bot.util import permissions, default, http
+from bot.util import permissions, default, http, config
+
+config = config.get_config("bot")
+cogs = config.get("cogs", [])
 
 
 class Admin(commands.Cog):
@@ -54,6 +58,28 @@ class Admin(commands.Cog):
         except Exception as e:
             return await ctx.send(default.traceback_maker(e))
         await ctx.send(f"Reloaded extension **{name}.py**")
+    
+    @commands.command()
+    @commands.check(permissions.is_owner)
+    async def reloadall(self, ctx):
+        """ Reloads all extensions. """
+        error_collection=[]
+        for cog in cogs:
+            try:
+                self.bot.reload_extension(f"bot.cogs.{cog}.{cog}")
+            except Exception as e:
+                error_collection.append(
+                    [cog, default.traceback_maker(e, advance=False)]
+                )
+                
+        if error_collection:
+            output = "\n".join([f"**{g[0]}** ```diff\n- {g[1]}```" for g in error_collection])
+            return await ctx.send(
+                f"Attempted to reload all extensions, was able to reload, "
+                f"however the following failed...\n\n{output}"
+            )
+
+        await ctx.send("Successfully reloaded all extensions")
 
     @commands.command()
     @commands.check(permissions.is_owner)
@@ -72,9 +98,9 @@ class Admin(commands.Cog):
 
     @commands.command()
     @commands.check(permissions.is_owner)
-    async def reboot(self, ctx):
-        """ Reboot the bot """
-        await ctx.send("Rebooting now...")
+    async def shut(self, ctx):
+        """ shuts the bot """
+        await ctx.send("shutting down...")
         time.sleep(1)
         sys.exit(0)
 
