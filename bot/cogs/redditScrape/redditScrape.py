@@ -10,7 +10,7 @@ try:
 except FileNotFoundError:
     db = []
 
-webhook_url = "https://discordapp.com/api/webhooks/933230265747247145/1qpjUjM3_xHuzK5kpma35aAbIqJU2IRPTQeLXHhR6BK5vCCF6Wxhf28iHcUwsg3YVJAI"
+webhook_url = ""
 subreddit   = 'cshighschoolers' # can be chained with + (example: python+webdev)
 
 req = requests.get(f'https://www.reddit.com/r/{subreddit}/new/.json', headers={
