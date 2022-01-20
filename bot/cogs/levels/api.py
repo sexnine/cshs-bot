@@ -14,10 +14,13 @@ class LevelsApi:
         self.util = LevelUtil(self.config.get("xp_per_level"), level_up_callback)
 
     async def add_xp(self, user_id: int, xp: int, return_user: bool = False) -> Optional[User]:
-        user = await User.get(user=user_id)
+        user = await User.get(user_id)
         data_to_set = await self.util.get_level_set(user)
-        await user.update(Inc({User.xp: xp}), Set(data_to_set))
-        return await User.get(user=user_id) if return_user else None
+        if data_to_set:
+            await user.update(Inc({User.xp: xp}), Set(data_to_set))
+        else:
+            await user.update(Inc({User.xp: xp}))
+        return await User.get(user_id) if return_user else None
 
     async def set_xp(self, user_id: int, xp: int) -> User:
         user = User(id=user_id, xp=xp)
