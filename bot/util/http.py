@@ -2,6 +2,7 @@ import aiohttp
 
 from functools import wraps
 
+
 def cache(maxsize=128):
     cache = {}
 
@@ -25,7 +26,9 @@ def cache(maxsize=128):
                 cache[key] = res
 
             return res
+
         return inner
+
     return decorator
 
 
@@ -52,7 +55,9 @@ def async_cache(maxsize=128):
                 cache[key] = res
 
             return res
+
         return inner
+
     return decorator
 
 

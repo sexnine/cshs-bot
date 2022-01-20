@@ -5,23 +5,27 @@ from discord.ext import commands
 
 owners = config.get_config("bot").get("owners", [])
 
+
 def is_owner(ctx):
     """ checks if the author is one of the owners"""
     return ctx.author.id in owners
+
 
 async def check_permissions(ctx, perms, *, check=all):
     """ checks if author has permissions to a permission """
     if ctx.author.id in owners:
         return True
-    
+
     resolved = ctx.channel.permissions_for(ctx.author)
     return check(getattr(resolved, name, None) == value for name, value in perms.items())
 
 
 def has_permissions(*, check=all, **perms):
     """ discord.Commands method to check if author has permissions """
+
     async def pred(ctx):
         return await check_permissions(ctx, perms, check=check)
+
     return commands.check(pred)
 
 

@@ -7,6 +7,7 @@ import calendar
 
 from io import BytesIO
 
+
 def traceback_maker(err, advance: bool = True):
     """ A way to debug your code anywhere """
     _traceback = ''.join(traceback.format_tb(err.__traceback__))
@@ -19,7 +20,8 @@ def timetext(name):
     return f"{name}_{int(time.time())}.txt"
 
 
-def date(target, clock: bool = True, seconds: bool = False, ago: bool = False, only_ago: bool = False, raw: bool = False):
+def date(target, clock: bool = True, seconds: bool = False, ago: bool = False, only_ago: bool = False,
+         raw: bool = False):
     if isinstance(target, int) or isinstance(target, float):
         target = datetime.datetime.utcfromtimestamp(target)
 

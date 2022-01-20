@@ -6,29 +6,31 @@ from io import BytesIO
 from bot.util import default
 from discord.ext import commands
 
+
 class Discord(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        
+
     @commands.command()
     @commands.guild_only()
     async def avatar(self, ctx, *, user: discord.Member = None):
         """ Get the avatar of you or someone else"""
         user = user or ctx.author
         await ctx.send(f"Avatar to **{user.name}**\n{user.avatar.with_size(1024)}")
-    
+
     @commands.command()
     @commands.guild_only()
     async def roles(self, ctx):
         """ Get all roles in current server"""
         allroles = ""
-        
+
         for num, role in enumerate(sorted(ctx.guild.roles, reverse=True), start=1):
             allroles += f"[{str(num).zfill(2)}] {role.id}\t{role.name}\t[ Users: {len(role.members)} ]\r\n"
-        
+
         data = BytesIO(allroles.encode("utf-8"))
-        await ctx.send(content=f"Roles in **{ctx.guild.name}**", file=discord.File(data, filename=f"{default.timetext('Roles')}"))
-    
+        await ctx.send(content=f"Roles in **{ctx.guild.name}**",
+                       file=discord.File(data, filename=f"{default.timetext('Roles')}"))
+
     @commands.command()
     @commands.guild_only()
     async def joinedat(self, ctx, *, user: discord.Member = None):
@@ -107,7 +109,8 @@ class Discord(commands.Cog):
         user = user or ctx.author
 
         show_roles = ", ".join(
-            [f"<@&{x.id}>" for x in sorted(user.roles, key=lambda x: x.position, reverse=True) if x.id != ctx.guild.default_role.id]
+            [f"<@&{x.id}>" for x in sorted(user.roles, key=lambda x: x.position, reverse=True) if
+             x.id != ctx.guild.default_role.id]
         ) if len(user.roles) > 1 else "None"
 
         embed = discord.Embed(colour=user.top_role.colour.value)
@@ -120,6 +123,7 @@ class Discord(commands.Cog):
         embed.add_field(name="Roles", value=show_roles, inline=False)
 
         await ctx.send(content=f"ℹ About **{user.id}**", embed=embed)
-    
+
+
 def setup(bot):
     bot.add_cog(Discord(bot))
