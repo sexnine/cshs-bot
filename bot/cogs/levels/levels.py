@@ -44,11 +44,11 @@ class Levels(commands.Cog):
 
     @xp_cmd.command(name="add")
     async def add_xp_cmd(self, ctx: commands.Context, user: discord.Member, xp: int):
-        try:
-            user_info = await self.api.add_xp(user.id, xp)
-        except XPCantBeNegative:
-            await ctx.reply(embed=embed_msg(f"You can't make {user.mention} have negative xp.", MsgStatus.ERROR))
+        if xp <= 0:
+            await ctx.reply(embed=embed_msg(f"You can't add negative XP, please use `set` instead of `add`", MsgStatus.ERROR))
             return
+
+        user_info = await self.api.add_xp(user.id, xp, True)
 
         await ctx.reply(
             embed=embed_msg(f"Added `{xp}` xp to {user.mention}'s total.  {user.mention} now has `{user_info.xp}` xp."))
