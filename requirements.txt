@@ -17,3 +17,5 @@ typing_extensions==4.0.1
 vacefron.py==1.6.3
 yarl==1.7.2
 timeago==1.0.15
+requests==2.27.1
+discord_webhook==0.14.0
