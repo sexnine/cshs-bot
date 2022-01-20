@@ -1,5 +1,14 @@
 Discord bot for the r/cshighschoolers Discord Server :)
 
+[![CodeFactor](https://www.codefactor.io/repository/github/sexnine/cshs-bot/badge)](https://www.codefactor.io/repository/github/sexnine/cshs-bot)
+
+### Made using
+![Python](https://img.shields.io/badge/-Python-14354C?style=for-the-badge&logo=python&logoColor=white)
+![Docker](https://img.shields.io/badge/-Docker-white?style=for-the-badge&logo=docker)
+![MongoDB](https://img.shields.io/badge/-MongoDB-10aa50?style=for-the-badge&logo=mongodb&logoColor=white)
+![Python](https://img.shields.io/badge/-Pycord-5865f2?style=for-the-badge&logo=discord&logoColor=white)
+...and loss of sleep
+
 ## Development
 Make sure you have Python 3.10 installed, also would be good to have both Docker and docker-compose.
 
