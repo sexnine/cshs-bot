@@ -5,7 +5,7 @@ import os
 from logging import exception
 from discord.ext import commands
 from bot.util.config import get_config
-from bot.util.data import DefaultHelpCommand
+from bot.util.help import DefaultHelpCommand
 
 config = get_config("bot")
 
@@ -36,7 +36,6 @@ async def on_ready():
     print("Bot ready")
 
 try:
-    # bot.run(os.getenv("DISCORD_TOKEN"))
-    bot.run(str(config.get("token", "")))
+    bot.run(os.getenv("DISCORD_TOKEN"))
 except Exception as e:
     print(f"Error when logging in {e}")
