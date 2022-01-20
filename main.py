@@ -25,7 +25,9 @@ bot = commands.Bot(
     owner_ids=config.get("owners")
 )
 
-cogs = config.get("cogs", [])  # TODO: Move into config file
+cogs = config.get("cogs", [])
+if "config_manager" not in cogs:
+    cogs.append("config_manager")
 
 for cog in cogs:
     bot.load_extension(f"bot.cogs.{cog}.{cog}")
