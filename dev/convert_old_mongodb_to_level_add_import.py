@@ -12,9 +12,8 @@ print(data)
 output = ""
 
 for doc in data:
-    print(doc.get("id"))
-    if (user_id := doc.get("id")) and doc.get("guildid") == guild_id:
-        user_id = doc.get("id")
+    if doc.get("tag") and doc.get("guildid") == guild_id:
+        user_id: str = doc.get("tag")[2:-1]
         xp = doc.get("xp")
         output += f"{user_id},{xp}\n"
 
