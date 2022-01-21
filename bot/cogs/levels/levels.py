@@ -88,6 +88,37 @@ class Levels(commands.Cog):
         await ctx.reply(
             embed=embed_msg(f"Added `{xp}` xp to {user.mention}'s total.  {user.mention} now has `{user_info.xp}` xp."))
 
+    @xp_cmd.group(name="debug")
+    async def xp_debug_cmd(self, ctx: commands.Context):
+        pass
+
+    @xp_debug_cmd.command(name="add_from_file")
+    async def xp_debug_add_from_file_cmd(self, ctx: commands.Context):
+        attachments = ctx.message.attachments
+        if len(attachments) != 1:
+            await ctx.reply(embed=embed_msg("Please send `1` file with your message", MsgStatus.ERROR))
+            return
+
+        attachment = attachments[0]
+        file_content_bytes = await attachment.read()
+        file_content = file_content_bytes.decode("utf-8")
+        lines = file_content.splitlines()
+        await ctx.reply(embed=embed_msg(f"Starting now with {len(lines)} lines"))
+
+        error_lines = []
+        for i, line in enumerate(lines):
+            try:
+                user, xp = line.split(",")
+                await self.api.add_xp(int(user), int(xp), force_recalculate=True)
+            except Exception as e:
+                error_lines.append(i+1)
+                print(f"Error adding xp from file on line {i+1}: {e}")
+
+        error_lines_text = "`, `".join([str(x) for x in error_lines])
+        error_text = f"\n\nHad errors on `{len(error_lines)}` lines: `{error_lines_text}`" if error_lines_text else ""
+
+        await ctx.reply(embed=embed_msg("Done" + error_text))
+
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         # TODO: checks
@@ -98,7 +129,7 @@ class Levels(commands.Cog):
         discord_user = self.bot.get_user(user.id)
         embed = discord.Embed(title="**🎉 LEVEL UP!**",
                               description=f"{discord_user.mention} just reached Level **{user.level}**")
-        embed.add_field(name="Next Level:", value=f"`{user.next_level_xp}`xp")
+        embed.add_field(name="Next Level:", value=f"`{user.next_level_xp}xp`")
         embed.set_thumbnail(url=discord_user.avatar.url)
 
         await self.bot.get_channel(self.config.get("level_up_channel")).send(embed=embed)

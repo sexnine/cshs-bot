@@ -58,7 +58,7 @@ class TestCog(commands.Cog):
                 print(f"Finished counting from #{channel.name}")
         print("Finished counting")
 
-        output = "user,count\n"
+        output = ""
         for user, count in message_counts.items():
             output += f"{user},{count}\n"
 
