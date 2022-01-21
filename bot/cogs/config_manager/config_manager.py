@@ -64,7 +64,7 @@ class ConfigManager(commands.Cog):
         file = attachments[0]
         path = f"./config/{name}.yml"
         await file.save(path)
-        await ctx.reply(embed=embed_msg(f"Saved to `path`"))
+        await ctx.reply(embed=embed_msg(f"Saved to `{path}`"))
 
 
 def setup(bot):

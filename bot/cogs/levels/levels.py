@@ -45,7 +45,8 @@ class Levels(commands.Cog):
             embed.set_footer(text=f"Requested by {ctx.author} | Page {page + 1}")
 
             for i, user in enumerate(users):
-                name = self.bot.get_user(user.id).name or "Unknown User"
+                discord_user = self.bot.get_user(user.id)
+                name = discord_user.name if discord_user else "Unknown User"
                 embed.add_field(name=f"#{page*items_per_page+i+1}: {name}", value=f"Level: `{user.level}`\nTotal XP: `{user.xp}`")
 
             response = await conversation.ask(ctx, embed=embed, buttons={"prev": Button(label="Previous Page", disabled=page == 0),
