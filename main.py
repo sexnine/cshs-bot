@@ -6,6 +6,9 @@ from bot.util.help import DefaultHelpCommand
 from bot.db import init as init_beanie
 
 config = get_config("bot")
+# Uses config for owner(s), fallbacks to application info
+commands.Bot.owner_ids = property(lambda self: config.get("owners") or self._owner_ids, lambda self, users: setattr(self, "_owner_ids", users))
+commands.Bot.owner_id = property(lambda self: None if self.owner_ids else self._owner_id, lambda self, user_id: setattr(self, "_owner_id", user_id))
 
 intents = discord.Intents.default()
 intents.members = True
@@ -22,7 +25,6 @@ bot = commands.Bot(
         everyone=False
     ),
     help_command=DefaultHelpCommand(),
-    owner_ids=config.get("owners")
 )
 
 cogs = config.get("cogs", [])
