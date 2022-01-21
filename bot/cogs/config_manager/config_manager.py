@@ -47,7 +47,7 @@ class ConfigManager(commands.Cog):
             return
 
         config._load_config()
-        await ctx.reply(embed=embed_msg(f"Reloaded `{name}`"))
+        await ctx.reply(embed=embed_msg(f"Reloaded `{name}` config"))
 
     @cmd.command(name="set")
     async def set_config_cmd(self, ctx: commands.Context, name: str):
