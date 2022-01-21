@@ -26,7 +26,7 @@ class Fun(commands.Cog):
         answer = random.choice(ballresponse)
         await ctx.send(f"🎱 **Question:** {question}\n**Answer:** {answer}")
 
-    async def randomeimageapi(self, ctx: commands.Context, url: str, endpoint: str, token: str = None):
+    async def randomimageapi(self, ctx: commands.Context, url: str, endpoint: str, token: str = None):
         try:
             r = await http.get(
                 url, res_method="json", no_cache=True,
@@ -54,13 +54,13 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=1, per=1.5, type=commands.BucketType.user)
     async def duck(self, ctx: commands.Context):
         """ posts a random duck """
-        await self.randomeimageapi(ctx, "https://random-d.uk/api/v1/random", "url")
+        await self.randomimageapi(ctx, "https://random-d.uk/api/v1/random", "url")
 
     @commands.command()
     @commands.cooldown(rate=1, per=1.5, type=commands.BucketType.user)
     async def coffee(self, ctx):
         """ posts a random coffee """
-        await self.randomeimageapi(ctx, "https://coffee.alexflipnote.dev/random.json", "file")
+        await self.randomimageapi(ctx, "https://coffee.alexflipnote.dev/random.json", "file")
 
     @commands.command(aliases=["flip", "coin"])
     async def coinflip(self, ctx):

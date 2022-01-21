@@ -1,3 +1,4 @@
+from dis import dis
 import discord
 import time
 
@@ -10,7 +11,7 @@ class Misc(commands.Cog):
         self.bot = bot
         self.config = config.get_config("misc")
 
-    @commands.command(name="ping")
+    @commands.command()
     async def ping(self, ctx: commands.Context):
         """ Pong! """
         before = time.monotonic()
@@ -19,7 +20,7 @@ class Misc(commands.Cog):
         ping = (time.monotonic() - before) * 1000
         await message.edit(content=f"🏓 WS: {before_ws}ms  |  REST: {int(ping)}ms")
 
-    @commands.command(name="echo")
+    @commands.command()
     async def echo(self, ctx: commands.Context, *, content: str):
         """ echo! """
         embed = discord.Embed(title=content, color=discord.Color.green())
@@ -32,6 +33,10 @@ class Misc(commands.Cog):
         value = f"Welcome {member.mention} to {member.guild.name}' Discord server! Check out our rules over at {rules_channel.mention} and have a nice stay!"
         await welcome_channel.send(value)
 
+    @commands.command(aliases=["gh"])
+    async def github(self, ctx: commands.Context):
+        embed = discord.Embed(description="**[Github](https://github.com/sexnine/cshs-bot)**")
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Misc(bot))
