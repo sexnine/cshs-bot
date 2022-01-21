@@ -3,7 +3,7 @@
 **/.keep
 **/*.env
 .git/
-config/
+config/**.yml
 venv/
 dev/
 .idea/
