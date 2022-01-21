@@ -35,7 +35,7 @@ class Config:
 
     def _load_config(self) -> None:
         with open(self.__path, "r") as f:
-            self.__data = yaml.safe_load(f)
+            self.__data = yaml.safe_load(f) or {}
 
     def _write_config(self) -> None:
         with open(self.__path, "w") as f:

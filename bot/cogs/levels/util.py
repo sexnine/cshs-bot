@@ -42,7 +42,7 @@ class LevelUtil:
         if user.xp >= user.next_level_xp or force_calculate:
             result = await self.calculate_level(user)
             if result[0] > user.level:
-                get_event_loop().create_task(self.level_up_callback(user, user.level))
+                get_event_loop().create_task(self.level_up_callback(user, result[0]))
             return result
         return None
 
