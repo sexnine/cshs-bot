@@ -1,10 +1,7 @@
 import discord
-import vacefron
-
 from discord.ext import commands
 from typing import Optional
-
-vac_api = vacefron.Client()
+from bot.util import vac as vac_api
 
 
 class Memes(commands.Cog):
