@@ -27,6 +27,15 @@ class Misc(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.Cog.listener()
+    async def on_command_error(self, ctx, err):
+        if isinstance(err, commands.errors.MissingRequiredArgument) or isinstance(err, commands.errors.BadArgument):
+            helper = str(ctx.invoked_subcommand) if ctx.invoked_subcommand else str(ctx.command)
+            await ctx.send_help(helper)
+        
+        elif isinstance(err, commands.errors.CommandOnCooldown):
+            await ctx.send(f"This command is on cooldown... try again in {err.retry_after:.2f}")
+    
+    @commands.Cog.listener()
     async def on_user_join(self, member: discord.Member):
         welcome_channel = member.guild.get_channel(self.config.get("welcome_channel"))
         rules_channel = member.guild.get_channel(self.config.get("rules_channel"))
