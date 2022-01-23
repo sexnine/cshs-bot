@@ -1,5 +1,3 @@
-from fileinput import filename
-from optparse import Option
 import discord
 import vacefron
 
