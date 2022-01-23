@@ -8,7 +8,7 @@ from .util import LevelUtil
 
 
 class LevelsApi:
-    def __init__(self, bot: commands.Bot, config: Config, level_up_callback: Callable[[User, int], Awaitable[None]]):
+    def __init__(self, bot: commands.Bot, config: Config, level_up_callback: Callable[[int, int, int, int], Awaitable[None]]):
         self.bot = bot
         self.config = config
         self.util = LevelUtil(self.config.get("xp_per_level"), level_up_callback)
