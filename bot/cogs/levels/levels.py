@@ -47,7 +47,7 @@ class Levels(commands.Cog):
             for i, user in enumerate(users):
                 discord_user = self.bot.get_user(user.id)
                 name = discord_user.name if discord_user else "Unknown User"
-                embed.add_field(name=f"#{page*items_per_page+i+1}: {name}", value=f"Level: `{user.level}`\nTotal XP: `{user.xp}`")
+                embed.add_field(name=f"#{page*items_per_page+i+1}: {name}", value=f"Level: `{user.level}`\nTotal XP: `{user.xp:,}`")
 
             response = await conversation.ask(ctx, embed=embed, buttons={"prev": Button(label="Previous Page", disabled=page == 0),
                                                                          "next": Button(label="Next Page", disabled=user_count <= (page + 1) * items_per_page)})
@@ -75,7 +75,7 @@ class Levels(commands.Cog):
                 embed=embed_msg(f"You can't set {user.mention}'s xp to a negative number.", MsgStatus.ERROR))
             return
 
-        await ctx.reply(embed=embed_msg(f"Set {user.mention}'s xp to `{user_info.xp}`."))
+        await ctx.reply(embed=embed_msg(f"Set {user.mention}'s xp to `{user_info.xp:,}`."))
 
     @xp_cmd.command(name="add")
     async def add_xp_cmd(self, ctx: commands.Context, user: discord.Member, xp: int):
@@ -87,7 +87,7 @@ class Levels(commands.Cog):
         user_info = await self.api.add_xp(user.id, xp, True)
 
         await ctx.reply(
-            embed=embed_msg(f"Added `{xp}` xp to {user.mention}'s total.  {user.mention} now has `{user_info.xp}` xp."))
+            embed=embed_msg(f"Added `{xp}` xp to {user.mention}'s total.  {user.mention} now has `{user_info.xp:,}` xp."))
 
     @xp_cmd.group(name="debug")
     async def xp_debug_cmd(self, ctx: commands.Context):
@@ -126,11 +126,11 @@ class Levels(commands.Cog):
         if not message.author.bot:
             await self.api.add_xp(message.author.id, self.config.get("xp_per_message"))
 
-    async def on_level_up(self, user: User, old_level: int):
-        discord_user = self.bot.get_user(user.id)
+    async def on_level_up(self, user_id: int, level: int, next_level_xp: int, previous_level_xp: int):
+        discord_user = self.bot.get_user(user_id)
         embed = discord.Embed(title="**🎉 LEVEL UP!**",
-                              description=f"{discord_user.mention} just reached Level **{user.level}**")
-        embed.add_field(name="Next Level:", value=f"`{user.next_level_xp}xp`")
+                              description=f"{discord_user.mention} just reached Level **{level}**")
+        embed.add_field(name="Next Level:", value=f"`{next_level_xp:,}xp`")
         embed.set_thumbnail(url=discord_user.avatar.url)
 
         await self.bot.get_channel(self.config.get("level_up_channel")).send(embed=embed)
