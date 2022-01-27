@@ -87,7 +87,7 @@ class Levels(commands.Cog):
         user_info = await self.api.add_xp(user.id, xp, True)
 
         await ctx.reply(
-            embed=embed_msg(f"Added `{xp}` xp to {user.mention}'s total.  {user.mention} now has `{user_info.xp:,}` xp."))
+            embed=embed_msg(f"Added `{xp:,}` xp to {user.mention}'s total.  {user.mention} now has `{user_info.xp:,}` xp."))
 
     @xp_cmd.group(name="debug")
     async def xp_debug_cmd(self, ctx: commands.Context):
@@ -130,7 +130,7 @@ class Levels(commands.Cog):
         discord_user = self.bot.get_user(user_id)
         embed = discord.Embed(title="**🎉 LEVEL UP!**",
                               description=f"{discord_user.mention} just reached Level **{level}**")
-        embed.add_field(name="Next Level:", value=f"`{next_level_xp:,}xp`")
+        embed.add_field(name="Next Level:", value=f"`{next_level_xp:,}` xp")
         embed.set_thumbnail(url=discord_user.avatar.url)
 
         await self.bot.get_channel(self.config.get("level_up_channel")).send(embed=embed)
