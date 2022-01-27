@@ -21,7 +21,7 @@ async def get_rank_card(user: discord.Member) -> RankCard:
 
 
 class LevelUtil:
-    def __init__(self, xp_per_level: int, level_up_callback: Callable[[User, int], Awaitable[None]]):
+    def __init__(self, xp_per_level: int, level_up_callback: Callable[[int, int, int, int], Awaitable[None]]):
         self.xp_per_level = xp_per_level
         self.level_up_callback = level_up_callback
 
@@ -42,7 +42,7 @@ class LevelUtil:
         if user.xp >= user.next_level_xp or force_calculate:
             result = await self.calculate_level(user)
             if result[0] > user.level:
-                get_event_loop().create_task(self.level_up_callback(user, result[0]))
+                get_event_loop().create_task(self.level_up_callback(user.id, *result))
             return result
         return None
 

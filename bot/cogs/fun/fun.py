@@ -181,14 +181,6 @@ class Fun(commands.Cog):
 
         await ctx.send(f"**{user.name}** is **{hot:.2f}%** hot {emoji}")
 
-    @commands.command(aliases=["noticemesenpai"])
-    async def noticeme(self, ctx):
-        """ Notice me senpai! owo"""
-        if not permissions.can_handle(ctx, "attach_files"):
-            return await ctx.send("I cannot send images here ;-;")
-
-        bio = BytesIO(await http.get("https://i.alexflipnote.dev/500ce4.gif", res_method="read"))
-
     @commands.command(aliases=["slots", "bet"])
     @commands.cooldown(rate=1, per=3.0, type=commands.BucketType.user)
     async def slot(self, ctx):
