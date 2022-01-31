@@ -36,12 +36,14 @@ class Misc(commands.Cog):
             await ctx.send(f"This command is on cooldown... try again in {err.retry_after:.2f}")
     
     @commands.Cog.listener()
-    async def on_user_join(self, member: discord.Member):
-        welcome_channel = member.guild.get_channel(self.config.get("welcome_channel"))
-        rules_channel = member.guild.get_channel(self.config.get("rules_channel"))
+    async def on_member_join(self, member: discord.Member):
         guild = self.config.get("guildid")
-        if member.bot or guild != member.guild:
+        welcome_channel = self.bot.get_channel(self.config.get("welcome_channel"))
+        rules_channel = self.bot.get_channel(self.config.get("rules_channel"))
+
+        if member.bot or guild != member.guild.id:
             return
+
         value = f"Welcome {member.mention} to {member.guild.name}' Discord server! Check out our rules over at {rules_channel.mention} and have a nice stay!"
         await welcome_channel.send(value)
 
