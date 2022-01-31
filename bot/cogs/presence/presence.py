@@ -64,16 +64,21 @@ class Presence(commands.Cog):
         match(Status):
             case "online":
                 status_info = discord.Status.online
+        
             case "dnd":
                 status_info = discord.Status.dnd
+        
             case "invisible":
                status_info = discord.Status.invisible
+        
             case "idle":
                 status_info =discord.Status.idle
+        
             case _:
                 status_info=discord.Status.online
         
         await self.bot.change_presence(status=status_info, activity=activity)
+        
         embed = discord.Embed(title=":white_check_mark: Success", description=f"Successfully changed Bots status to **{Status}**", color=0xa2faa3)
         await ctx.send(embed=embed)
 
@@ -98,6 +103,7 @@ class Presence(commands.Cog):
                 activity = discord.Activity(type=discord.ActivityType.listening, name="-help")
         
         await self.bot.change_presence(status=status_info, activity=activity)
+        
         embed = discord.Embed(title=":white_check_mark: Success", description=f"Successfully changed Bots Activity to **{activity_type}** - **{name}**", color=0xa2faa3)
         await ctx.send(embed=embed)
     
@@ -106,7 +112,9 @@ class Presence(commands.Cog):
         """ Change Activity to streaming """
         url = url.strip("<>")
         activity = discord.Streaming(name=name, url=url)
+        
         await self.bot.change_presence(status=status_info, activity=activity)
+        
         embed = discord.Embed(title=":white_check_mark: Success", description=f"Successfully changed the Bot's status to **Streaming** - *{url}* : **{name}**", color=0xa2faa3)
         await ctx.send(embed=embed)
     
