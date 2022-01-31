@@ -39,6 +39,9 @@ class Misc(commands.Cog):
     async def on_user_join(self, member: discord.Member):
         welcome_channel = member.guild.get_channel(self.config.get("welcome_channel"))
         rules_channel = member.guild.get_channel(self.config.get("rules_channel"))
+        guild = self.config.get("guildid")
+        if member.bot or guild != member.guild:
+            return
         value = f"Welcome {member.mention} to {member.guild.name}' Discord server! Check out our rules over at {rules_channel.mention} and have a nice stay!"
         await welcome_channel.send(value)
 
