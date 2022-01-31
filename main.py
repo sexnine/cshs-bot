@@ -10,14 +10,9 @@ config = get_config("bot")
 commands.Bot.owner_ids = property(lambda self: config.get("owners") or self._owner_ids, lambda self, users: setattr(self, "_owner_ids", users))
 commands.Bot.owner_id = property(lambda self: None if self.owner_ids else self._owner_id, lambda self, user_id: setattr(self, "_owner_id", user_id))
 
-intents = discord.Intents.default()
-intents.members = True
-intents.guilds = True
-intents.messages = True
-intents.reactions = True
-intents.presences = True
+intents = discord.Intents.all()
 bot = commands.Bot(
-    command_prefix=config.get("prefixes", "-"),
+    command_prefix=config.get("prefixes", ":"),
     intents=intents,
     allowed_mentions=discord.AllowedMentions(
         roles=False,
@@ -38,7 +33,7 @@ for cog in cogs:
 @bot.event
 async def on_ready():
     print("Bot ready")
-    await init_beanie()
+    # await init_beanie()
 
 
 try:
