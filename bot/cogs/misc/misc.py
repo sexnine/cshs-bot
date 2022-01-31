@@ -42,6 +42,9 @@ class Misc(commands.Cog):
         rules_channel = self.bot.get_channel(self.config.get("rules_channel"))
 
         if member.bot or guild != member.guild.id:
+            if member.bot:
+                role = self.bot.get_roles(self.config.get("bot_role"))
+                member.add_roles(role)
             return
 
         value = f"Welcome {member.mention} to {member.guild.name}' Discord server! Check out our rules over at {rules_channel.mention} and have a nice stay!"
