@@ -1,0 +1,5 @@
+type: "game" # game | streaming | watching | listening
+activity_name: "Test"
+status: "online" # online | idle | dnd | invisible
+url: "" # URL of the stream(youtube or Twitch only)
+        # The URL should be formatted as an actual url
