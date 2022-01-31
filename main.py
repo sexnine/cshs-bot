@@ -33,7 +33,7 @@ for cog in cogs:
 @bot.event
 async def on_ready():
     print("Bot ready")
-    # await init_beanie()
+    await init_beanie()
 
 
 try:
