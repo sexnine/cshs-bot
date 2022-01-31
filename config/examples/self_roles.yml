@@ -1,0 +1,37 @@
+assignable_roles:
+  color:
+    placeholder: Pick a username color
+    default_description: Username color
+    default_emoji: "🎨"
+    single_value: true
+    none_option: false
+    roles:
+      '884382178950135859': # yes they need to be strings, dont ask why
+        label: Red
+      '884382215558029343':
+        label: Blue
+  misc:
+    placeholder: Optional roles
+    default_description: Optional role
+    default_emoji: "🛠"
+    single_value: false
+    none_option: true
+    roles:
+      '884417205234720818':
+        label: Test Assignable role
+        description: test role :)
+        emoji: "😎"
+      '884846464793182278':
+        label: another one
+        emoji: "😳"
+  game:
+    placeholder: Games and events
+    default_description: Game role
+    default_emoji: "🎮"
+    single_value: false
+    none_option: true
+    roles:
+      '884835662992375848':
+        label: Test Game
+        description: test game lmaoo
+role_picker_interaction_id: 1dfbb231d497403ebb6ed8402b35d6e8 # just set to something random, it doesn't matter

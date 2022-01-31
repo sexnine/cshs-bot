@@ -34,7 +34,7 @@ class Config:
         return self.__data.get(*args, **kwargs)
 
     def _load_config(self) -> None:
-        with open(self.__path, "r") as f:
+        with open(self.__path, "r", encoding="utf-8") as f:
             self.__data = yaml.safe_load(f) or {}
 
     def _write_config(self) -> None:
