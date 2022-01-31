@@ -12,7 +12,7 @@ commands.Bot.owner_id = property(lambda self: None if self.owner_ids else self._
 
 intents = discord.Intents.all()
 bot = commands.Bot(
-    command_prefix=config.get("prefixes", ":"),
+    command_prefix=config.get("prefixes", "-"),
     intents=intents,
     allowed_mentions=discord.AllowedMentions(
         roles=False,
