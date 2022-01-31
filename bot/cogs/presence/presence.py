@@ -1,7 +1,7 @@
 import discord
 
 from discord.ext import commands
-from bot.util import config, permissions
+from bot.util import config
 
 class Presence(commands.Cog):
     def __init__(self, bot):
@@ -51,7 +51,7 @@ class Presence(commands.Cog):
         await self.bot.change_presence(status=status_info, activity=activity)
 
     @commands.group()
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def presence(self, ctx: commands.Context):
         """ Change Presence """
         if ctx.invoked_subcommand is None:
