@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 from bot.util import config
 
+
 class Presence(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

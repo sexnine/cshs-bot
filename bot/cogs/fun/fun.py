@@ -6,7 +6,7 @@ import aiohttp
 
 from io import BytesIO
 from discord.ext import commands
-from bot.util import permissions, http
+from bot.util import http
 
 
 class Fun(commands.Cog):

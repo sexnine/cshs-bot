@@ -1,15 +1,3 @@
-""" WARNING!!!!!
-
-    This cog handles the core Bot functions
-    Enable it at your own risk.
-    
-    
-    
-    
-    For the love of GOD please dont enable it.(I haven't tested it, yes) -- Nuke ❤️
-"""
-
-from asyncio import subprocess
 import time
 import aiohttp
 import discord
@@ -18,7 +6,7 @@ import os
 import sys
 
 from discord.ext import commands
-from bot.util import permissions, default, http, config
+from bot.util import default, http, config
 
 config = config.get_config("bot")
 cogs = config.get("cogs", [])
@@ -30,7 +18,7 @@ class Admin(commands.Cog):
         self._last_result = None
 
     @commands.command()
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def load(self, ctx, name: str):
         """ Loads an extension. """
         try:
@@ -40,7 +28,7 @@ class Admin(commands.Cog):
         await ctx.send(f"Loaded extension **{name}.py**")
 
     @commands.command()
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def unload(self, ctx, name: str):
         """ Unloads an extension. """
         try:
@@ -50,7 +38,7 @@ class Admin(commands.Cog):
         await ctx.send(f"Unloaded extension **{name}.py**")
 
     @commands.command()
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def reload(self, ctx, name: str):
         """ Reloads an extension. """
         try:
@@ -60,7 +48,7 @@ class Admin(commands.Cog):
         await ctx.send(f"Reloaded extension **{name}.py**")
     
     @commands.command()
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def reloadall(self, ctx):
         """ Reloads all extensions. """
         error_collection=[]
@@ -82,7 +70,7 @@ class Admin(commands.Cog):
         await ctx.send("Successfully reloaded all extensions")
 
     @commands.command()
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def reloadutils(self, ctx, name: str):
         """ Reloads a utils module. """
         name_maker = f"bot/util/{name}.py"
@@ -97,7 +85,7 @@ class Admin(commands.Cog):
         await ctx.send(f"Reloaded module **{name_maker}**")
 
     @commands.command()
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def shut(self, ctx):
         """ shuts the bot """
         await ctx.send("shutting down...")
@@ -105,7 +93,7 @@ class Admin(commands.Cog):
         sys.exit(0)
 
     @commands.command()
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def dm(self, ctx, user: discord.User, *, message: str):
         """ DM the user of your choice """
         try:
@@ -115,13 +103,13 @@ class Admin(commands.Cog):
             await ctx.send("This user might be having DMs blocked or it's a bot account...")
 
     @commands.group()
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def change(self, ctx):
         if ctx.invoked_subcommand is None:
             await ctx.send_help(str(ctx.command))
 
     @change.command(name="username")
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def change_username(self, ctx, *, name: str):
         """ Change username. """
         try:
@@ -131,7 +119,7 @@ class Admin(commands.Cog):
             await ctx.send(err)
 
     @change.command(name="nickname")
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def change_nickname(self, ctx, *, name: str = None):
         """ Change nickname. """
         try:
@@ -144,7 +132,7 @@ class Admin(commands.Cog):
             await ctx.send(err)
 
     @change.command(name="avatar")
-    @commands.check(permissions.is_owner)
+    @commands.is_owner()
     async def change_avatar(self, ctx, url: str = None):
         """ Change avatar. """
         if url is None and len(ctx.message.attachments) == 1:

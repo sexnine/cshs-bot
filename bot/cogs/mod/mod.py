@@ -6,6 +6,30 @@ from discord.ext import commands
 from bot.util import permissions, default
 
 
+async def check_priv(ctx: commands.Context, member: discord.Member):
+    """ Custom (weird) way to check permissions when handling moderation commands """
+    try:
+        # Self checks
+        if member.id == ctx.author.id:
+            return await ctx.send(f"You can't {ctx.command.name} yourself")
+        if member.id == ctx.bot.user.id:
+            return await ctx.send("So that's what you think of me huh..? sad ;-;")
+
+        # Check if user bypasses
+        if ctx.author.id == ctx.guild.owner.id:
+            return False
+        
+        if member.id == ctx.guild.owner.id:
+            return await ctx.send(f"You can't {ctx.command.name} the owner, lol")
+        if ctx.author.top_role == member.top_role:
+            return await ctx.send(f"You can't {ctx.command.name} someone who has the same permissions as you...")
+        if ctx.author.top_role < member.top_role:
+            return await ctx.send(f"Nope, you can't {ctx.command.name} someone higher than yourself.")
+    
+    except Exception:
+        pass
+
+
 # Source: https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py
 class MemberID(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str):
@@ -36,7 +60,7 @@ class Moderator(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @permissions.has_permissions(kick_members=True)
+    @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member, *, reason: str = None):
         """ Kicks a user from the current server """
         if await permissions.check_priv(ctx, member):
@@ -50,7 +74,7 @@ class Moderator(commands.Cog):
 
     @commands.command(aliases=["nick"])
     @commands.guild_only()
-    @permissions.has_permissions(manage_nicknames=True)
+    @commands.has_permissions(manage_nicknames=True)
     async def nickname(self, ctx, member: discord.Member, *, name: str = None):
         """ Nicknames a user from the current server. """
         if await permissions.check_priv(ctx, member):
@@ -67,7 +91,7 @@ class Moderator(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @permissions.has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: MemberID, *, reason: str = None):
         """ Bans a user from the current server. """
         m = ctx.guild.get_member(member)
@@ -83,7 +107,7 @@ class Moderator(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.max_concurrency(1, per=commands.BucketType.user)
-    @permissions.has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members=True)
     async def massban(self, ctx, reason: ActionReason, *members: MemberID):
         """ Mass bans multiple members from the server. """
         try:
@@ -95,7 +119,7 @@ class Moderator(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @permissions.has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, member: MemberID, *, reason: str = None):
         """ Unbans a user from the current server. """
         try:
@@ -106,7 +130,7 @@ class Moderator(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @permissions.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def mute(self, ctx, member: discord.Member, *, reason: str = None):
         """ Mutes a user from the current server. """
         if await permissions.check_priv(ctx, member):
@@ -126,10 +150,10 @@ class Moderator(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @permissions.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def unmute(self, ctx, member: discord.Member, *, reason: str = None):
         """ Unmutes a user from the current server. """
-        if await permissions.check_priv(ctx, member):
+        if await check_priv(ctx, member):
             return
 
         muted_role = next((g for g in ctx.guild.roles if g.name == "Muted"), None)
@@ -146,7 +170,7 @@ class Moderator(commands.Cog):
 
     @commands.command(aliases=["ar"])
     @commands.guild_only()
-    @permissions.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def announcerole(self, ctx, *, role: discord.Role):
         """ Makes a role mentionable and removes it whenever you mention the role """
         if role == ctx.guild.default_role:
@@ -183,7 +207,7 @@ class Moderator(commands.Cog):
 
     @commands.group()
     @commands.guild_only()
-    @permissions.has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members=True)
     async def find(self, ctx):
         """ Finds a user within your search term """
         if ctx.invoked_subcommand is None:
@@ -237,7 +261,7 @@ class Moderator(commands.Cog):
     @commands.group()
     @commands.guild_only()
     @commands.max_concurrency(1, per=commands.BucketType.guild)
-    @permissions.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     async def prune(self, ctx):
         """ Removes messages from the current server. """
         if ctx.invoked_subcommand is None:
