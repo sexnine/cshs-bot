@@ -3,7 +3,7 @@ import re
 import asyncio
 
 from discord.ext import commands
-from bot.util import permissions, default
+from bot.util import default
 
 
 async def check_priv(ctx: commands.Context, member: discord.Member):
@@ -125,46 +125,6 @@ class Moderator(commands.Cog):
         try:
             await ctx.guild.unban(discord.Object(id=member), reason=default.responsible(ctx.author, reason))
             await ctx.send(default.actionmessage("unbanned"))
-        except Exception as e:
-            await ctx.send(e)
-
-    @commands.command()
-    @commands.guild_only()
-    @commands.has_permissions(manage_roles=True)
-    async def mute(self, ctx, member: discord.Member, *, reason: str = None):
-        """ Mutes a user from the current server. """
-        if await check_priv(ctx, member):
-            return
-
-        muted_role = next((g for g in ctx.guild.roles if g.name == "Muted"), None)
-
-        if not muted_role:
-            return await ctx.send(
-                "Are you sure you've made a role called **Muted**? Remember that it's case sensitive too...")
-
-        try:
-            await member.add_roles(muted_role, reason=default.responsible(ctx.author, reason))
-            await ctx.send(default.actionmessage("muted"))
-        except Exception as e:
-            await ctx.send(e)
-
-    @commands.command()
-    @commands.guild_only()
-    @commands.has_permissions(manage_roles=True)
-    async def unmute(self, ctx, member: discord.Member, *, reason: str = None):
-        """ Unmutes a user from the current server. """
-        if await check_priv(ctx, member):
-            return
-
-        muted_role = next((g for g in ctx.guild.roles if g.name == "Muted"), None)
-
-        if not muted_role:
-            return await ctx.send(
-                "Are you sure you've made a role called **Muted**? Remember that it's case sensitive too...")
-
-        try:
-            await member.remove_roles(muted_role, reason=default.responsible(ctx.author, reason))
-            await ctx.send(default.actionmessage("unmuted"))
         except Exception as e:
             await ctx.send(e)
 
