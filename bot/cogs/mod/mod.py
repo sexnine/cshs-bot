@@ -63,7 +63,7 @@ class Moderator(commands.Cog):
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member, *, reason: str = None):
         """ Kicks a user from the current server """
-        if await permissions.check_priv(ctx, member):
+        if await check_priv(ctx, member):
             return
 
         try:
@@ -77,7 +77,7 @@ class Moderator(commands.Cog):
     @commands.has_permissions(manage_nicknames=True)
     async def nickname(self, ctx, member: discord.Member, *, name: str = None):
         """ Nicknames a user from the current server. """
-        if await permissions.check_priv(ctx, member):
+        if await check_priv(ctx, member):
             return
 
         try:
@@ -95,7 +95,7 @@ class Moderator(commands.Cog):
     async def ban(self, ctx, member: MemberID, *, reason: str = None):
         """ Bans a user from the current server. """
         m = ctx.guild.get_member(member)
-        if m is not None and await permissions.check_priv(ctx, m):
+        if m is not None and await check_priv(ctx, m):
             return
 
         try:
@@ -133,7 +133,7 @@ class Moderator(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     async def mute(self, ctx, member: discord.Member, *, reason: str = None):
         """ Mutes a user from the current server. """
-        if await permissions.check_priv(ctx, member):
+        if await check_priv(ctx, member):
             return
 
         muted_role = next((g for g in ctx.guild.roles if g.name == "Muted"), None)
