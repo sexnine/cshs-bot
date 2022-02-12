@@ -5,6 +5,7 @@ from typing import Optional
 from .util import get_rank_card
 from .api import LevelsApi
 from .errors import XPCantBeNegative
+from .voice import VoiceAddon
 from bot.util import embed_msg, MsgStatus
 from bot.util.config import get_config
 from bot.db import User
@@ -16,6 +17,7 @@ class Levels(commands.Cog):
         self.bot = bot
         self.config = get_config("levels")
         self.api = LevelsApi(bot, self.config, self.on_level_up)
+        VoiceAddon(self.bot, self.api)
 
     @commands.command(name="rank", aliases=["r"])
     async def rank_cmd(self, ctx: commands.Context, user: Optional[discord.Member]):

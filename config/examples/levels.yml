@@ -1,3 +1,9 @@
 xp_per_level: 100
 xp_per_message: 50
 level_up_channel: 832273996320866338
+voice:
+  interval: 30 # seconds
+  xp_per_interval: 8
+  ingored_channels:
+    - 846942714003849236
+    - 848981657923092589
