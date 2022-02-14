@@ -1,10 +1,11 @@
-from discord.ext import commands
+from discord.ext import commands, tasks
 import discord
 from discord.ui import Button
 from typing import Optional
 from .util import get_rank_card
 from .api import LevelsApi
 from .errors import XPCantBeNegative
+from .voice import VoiceAddon
 from bot.util import embed_msg, MsgStatus
 from bot.util.config import get_config
 from bot.db import User
@@ -16,6 +17,8 @@ class Levels(commands.Cog):
         self.bot = bot
         self.config = get_config("levels")
         self.api = LevelsApi(bot, self.config, self.on_level_up)
+        self.voice = VoiceAddon(self.bot, self.api)
+        tasks.loop(seconds=self.config.get("voice").get("interval"))(self.voice.check_task).start()
 
     @commands.command(name="rank", aliases=["r"])
     async def rank_cmd(self, ctx: commands.Context, user: Optional[discord.Member]):
@@ -134,6 +137,11 @@ class Levels(commands.Cog):
         embed.set_thumbnail(url=discord_user.avatar.url)
 
         await self.bot.get_channel(self.config.get("level_up_channel")).send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState,
+                                    after: discord.VoiceState):
+        await self.voice.on_voice_state_update(member, before, after)
 
 
 def setup(bot):
