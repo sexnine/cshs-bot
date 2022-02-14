@@ -1,7 +1,10 @@
 import discord
 
-from bot.util import permissions
 from discord.ext.commands import DefaultHelpCommand
+
+def can_handle(ctx, permission: str):
+    """ Checks if bot has permissions or is in DMs right now """
+    return isinstance(ctx.channel, discord.DMChannel) or getattr(ctx.channel.permissions_for(ctx.guild.me), permission)
        
 class HelpFormat(DefaultHelpCommand):
     def get_destination(self, no_pm: bool = False):
@@ -21,7 +24,7 @@ class HelpFormat(DefaultHelpCommand):
     
     async def send_pages(self, no_pm: bool = False):
         try:
-            if permissions.can_handle(self.context, "add_reactions"):
+            if can_handle(self.context, "add_reactions"):
                 await self.context.message.add_reaction(chr(0x2709))
         except discord.Forbidden:
             pass
