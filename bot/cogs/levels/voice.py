@@ -32,20 +32,17 @@ class VoiceAddon:
 
             channel: discord.VoiceChannel = self.bot.get_channel(channel_id)
 
-            if len(list(filter(lambda x: not x.bot, channel.members))) < 2:
+            user_list = list(filter(lambda x: not x.bot, channel.members))
+
+            if len(user_list) < 2:
                 self.bot_check_queue.remove(channel_id)
                 continue
 
-            if len(list(filter(lambda x: not x.self_deaf, [x.voice for x in channel.members]))) < 2:
+            if len(list(filter(lambda x: not x.self_deaf and not x.self_mute, [x.voice for x in user_list]))) < 2:
                 self.bot_check_queue.remove(channel_id)
                 continue
 
-            if len(list(filter(lambda x: not x.self_mute, [x.voice for x in channel.members]))) < 2:
-                self.bot_check_queue.remove(channel_id)
-                continue
-
-            users = channel.members
-            for user in users:
+            for user in user_list:
                 voice_state = user.voice
                 if voice_state.self_deaf or voice_state.self_mute:
                     continue
