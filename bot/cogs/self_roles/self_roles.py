@@ -5,11 +5,8 @@ from bot.util.config import get_config
 
 class SelfRoles(commands.Cog):
     def __init__(self, bot: discord.Bot):
-        print("self_roles")
         self.bot = bot
-        print("self_roles")
         self.config = get_config("self_roles")
-        print("self_roles")
 
     @commands.guild_only()
     @commands.is_owner()
