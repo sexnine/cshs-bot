@@ -134,7 +134,7 @@ class Levels(commands.Cog):
         embed = discord.Embed(title="**🎉 LEVEL UP!**",
                               description=f"{discord_user.mention} just reached Level **{level}**")
         embed.add_field(name="Next Level:", value=f"`{next_level_xp:,}` xp")
-        embed.set_thumbnail(url=discord_user.avatar.url)
+        embed.set_thumbnail(url=discord_user.display_avatar.url)
 
         await self.bot.get_channel(self.config.get("level_up_channel")).send(embed=embed)
 
