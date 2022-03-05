@@ -11,7 +11,7 @@ async def get_rank_card(user: discord.Member) -> RankCard:
     user_info = await User.get_user(user.id)
     rank = await User.find(User.xp > user_info.xp).count() + 1
     card = await vac.rank_card(username=str(user),
-                               avatar=user.avatar.url,
+                               avatar=user.display_avatar.url,
                                current_xp=user_info.xp,
                                next_level_xp=user_info.next_level_xp,
                                previous_level_xp=user_info.previous_level_xp,
