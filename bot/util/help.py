@@ -1,7 +1,7 @@
 from discord import commands
 import discord
 
-class MyHelpCommand(commands.MinimalHelpCommand):
+class HelpCommand(commands.MinimalHelpCommand):
     async def send_pages(self):
         destination = self.get_destination()
         embed = discord.Embed(color=discord.Color.yellow(), description='')
