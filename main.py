@@ -2,7 +2,7 @@ import discord
 import os
 from discord.ext import commands
 from bot.util.config import get_config
-from bot.util.help import DefaultHelpCommand
+from bot.util.help import HelpCommand
 from bot.db import init as init_beanie
 
 config = get_config("bot")
@@ -19,7 +19,7 @@ bot = commands.Bot(
         users=True,
         everyone=False
     ),
-    help_command=DefaultHelpCommand(),
+    help_command=HelpCommand(),
 )
 
 cogs = config.get("cogs", [])
