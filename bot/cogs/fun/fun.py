@@ -200,8 +200,7 @@ class Fun(commands.Cog):
             await ctx.send(f"{slotmachine} No match, you lost 😢")
             
     @commands.command()
-    async def xkcd(ctx, number="random"):
-        async with aiohttp.ClientSession() as http:
+    async def xkcd(self, ctx, number="random"):
             if number == "random":
                 async with http.get("https://xkcd.com/info.0.json") as c:
                     current = await c.json()
