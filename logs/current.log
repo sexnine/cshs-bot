@@ -1,1 +1,5 @@
-
+1649590457
+2022-04-10 18:34:17,086 - [INFO]: Cog <__main__.Test object at 0x10645ee60> has been initialized.
+2022-04-10 18:34:17,087 - [INFO]: Logged in cog Test: Test
+2022-04-10 18:34:17,087 - [WARNING]: Logged in cog Test: Test
+2022-04-10 18:34:17,087 - [ERROR]: An error occurred in cog Test in command test: Test
