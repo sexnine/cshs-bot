@@ -7,16 +7,16 @@ import logging
 path = getcwd() + "/logs"
 logging.basicConfig(filename=path + "current.log", level=logging.INFO, format='%(asctime)s - [%(levelname)s]: %(message)s')
 
-# create a new log and flush current.log
-with open(path + "current.log", "r") as f:
-    data = f.read()
-    with open(path + "current.log", "w") as f1:
-        if data != "":
-            ts = data.split("\n")[0]
-            print(ts)
-            with open(path + f"{ts}.log", "w") as file:
-                file.write(data)
-        f1.write(str(int(time())) + "\n")
+def init():
+    with open(path + "current.log", "r") as f:
+        data = f.read()
+        with open(path + "current.log", "w") as f1:
+            if data != "":
+                ts = data.split("\n")[0]
+                print(ts)
+                with open(path + f"{ts}.log", "w") as file:
+                    file.write(data)
+            f1.write(str(int(time())) + "\n")
 
 
 # implementing the logger class

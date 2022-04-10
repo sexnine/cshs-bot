@@ -4,6 +4,7 @@ from discord.ext import commands
 from bot.util.config import get_config
 from bot.util.help import HelpCommand
 from bot.db import init as init_beanie
+from bot.util.logger import init as init_logger
 
 config = get_config("bot")
 # Uses config for owner(s), fallbacks to application info
@@ -34,6 +35,7 @@ for cog in cogs:
 async def on_ready():
     print("Bot ready")
     await init_beanie()
+    init_logger()
 
 
 try:
