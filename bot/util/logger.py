@@ -22,43 +22,42 @@ def init():
 
 # implementing the logger class
 class Logger:
-    def __init__(self, cog_self):
-        self.cog_self = cog_self
-        self.cog_name = self.cog_self.__class__.__name__
+    def __init__(self):
         init()
         self.start()
     
     # detects when logger has been initialized
-    def start(self):
-        logging.info(f"Cog {self.cog_name} has been initialized.")
+    def start(self, cog_name):
+        logging.info(f"Cog {cog_name} has been initialized.")
     
     # create the logging functions
-    def info(self, message):
-        logging.info(f"Logged in cog {self.cog_name}: {message}")
+    def info(self, cog_name, message):
+        logging.info(f"Logged in cog {cog_name}: {message}")
 
-    def debug(self, message):
-        logging.debug(f"Logged in cog {self.cog_name}: {message}")
+    def debug(self, cog_name, message):
+        logging.debug(f"Logged in cog {cog_name}: {message}")
 
-    def warning(self, message):
-        logging.warning(f"Logged in cog {self.cog_name}: {message}")
+    def warning(self, cog_name, message):
+        logging.warning(f"Logged in cog {cog_name}: {message}")
 
-    def error(self, message, name):
-        logging.error(f"An error occurred in cog {self.cog_name} in command {name}: {message}")
+    def error(self, cog_name, message, name):
+        logging.error(f"An error occurred in cog {cog_name} in command {name}: {message}")
     
     # detect when logger has been uninitialized
-    def __del__(self):
-        logging.debug(f"Cog {self.cog_name} has been uninitialized.")
+    def __del__(self, cog_name):
+        logging.debug(f"Cog {cog_name} has been uninitialized.")
 
 
 class CogErrorLogging(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.logger = Logger(self)
+        self.logger = Logger()
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
-        self.logger.error(error, ctx)
+        command = ctx.command
+        self.logger.error(command.cog_name, error, command)
 
     @commands.Cog.listener()
     async def on_command(self, ctx: commands.Context):
-        self.logger.info(f"{ctx.command} has been invoked.")
+        self.logger.info(ctx.command.cog_name, f"{ctx.command} has been invoked.")
