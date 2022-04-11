@@ -200,8 +200,8 @@ class Fun(commands.Cog):
             await ctx.send(f"{slotmachine} No match, you lost 😢")
             
     @commands.command()
-    async def xkcd(self, ctx, number="random"):
-            if number == "random":
+    async def xkcd(self, ctx, number=None):
+            if number is None:
                 async with http.get("https://xkcd.com/info.0.json") as c:
                     current = await c.json()
                 num = random.randint(1, current["num"])
