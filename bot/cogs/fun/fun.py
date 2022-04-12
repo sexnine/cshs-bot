@@ -3,6 +3,8 @@ import discord
 import secrets
 import asyncio
 import aiohttp
+from aiohttp import client_exceptions
+from bot.util import embed_msg, MsgStatus
 
 from io import BytesIO
 from discord.ext import commands
@@ -201,25 +203,20 @@ class Fun(commands.Cog):
             await ctx.send(f"{slotmachine} No match, you lost 😢")
 
     @commands.command()
-    async def xkcd(self, ctx, number: Optional[int]):
-        if number is None:
-            async with http.get("https://xkcd.com/info.0.json") as c:
-                current = await c.json()
-            num = random.randint(1, current["num"])
-            async with http.get(f"https://xkcd.com/{num}/info.0.json") as c:
-                comic = await c.json()
+    async def xkcd(self, ctx: commands.Context, number: Optional[int]):
+        if not number:
+            async with http.get("https://xkcd.com/info.0.json") as res:
+                current = await res.json()
+            number = random.randint(1, current["num"])
+
+        try:
+            async with http.get(f"https://xkcd.com/{number}/info.0.json") as res:
+                comic = await res.json()
             embed = discord.Embed(title=comic["title"])
             embed.set_image(url=comic["img"])
             await ctx.send(embed=embed)
-        else:
-            try:
-                async with http.get(f"https://xkcd.com/{number}/info.0.json") as c:
-                    comic = await c.json()
-                embed = discord.Embed(title=comic["title"])
-                embed.set_image(url=comic["img"])
-                await ctx.send(embed=embed)
-            except aiohttp.client_exceptions.ContentTypeError:
-                await ctx.send("This isn't a valid xkcd comic!")
+        except client_exceptions.ContentTypeError:
+            await ctx.send(embed=embed_msg("This isn't a valid xkcd comic!", MsgStatus.ERROR))
 
 
 def setup(bot):
