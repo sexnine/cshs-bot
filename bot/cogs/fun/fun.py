@@ -7,6 +7,7 @@ import aiohttp
 from io import BytesIO
 from discord.ext import commands
 from bot.util import http
+from typing import Optional
 
 
 class Fun(commands.Cog):
@@ -198,27 +199,28 @@ class Fun(commands.Cog):
             await ctx.send(f"{slotmachine} 2 in a row, you won! 🎉")
         else:
             await ctx.send(f"{slotmachine} No match, you lost 😢")
-            
+
     @commands.command()
-    async def xkcd(self, ctx, number=None):
-            if number is None:
-                async with http.get("https://xkcd.com/info.0.json") as c:
-                    current = await c.json()
-                num = random.randint(1, current["num"])
-                async with http.get(f"https://xkcd.com/{num}/info.0.json") as c:
+    async def xkcd(self, ctx, number: Optional[int]):
+        if number is None:
+            async with http.get("https://xkcd.com/info.0.json") as c:
+                current = await c.json()
+            num = random.randint(1, current["num"])
+            async with http.get(f"https://xkcd.com/{num}/info.0.json") as c:
+                comic = await c.json()
+            embed = discord.Embed(title=comic["title"])
+            embed.set_image(url=comic["img"])
+            await ctx.send(embed=embed)
+        else:
+            try:
+                async with http.get(f"https://xkcd.com/{number}/info.0.json") as c:
                     comic = await c.json()
                 embed = discord.Embed(title=comic["title"])
                 embed.set_image(url=comic["img"])
                 await ctx.send(embed=embed)
-            else:
-                try:
-                    async with http.get(f"https://xkcd.com/{number}/info.0.json") as c:
-                        comic = await c.json()
-                    embed = discord.Embed(title=comic["title"])
-                    embed.set_image(url=comic["img"])
-                    await ctx.send(embed=embed)
-                except aiohttp.client_exceptions.ContentTypeError:
-                    await ctx.send("This isn't a valid xkcd comic!")
+            except aiohttp.client_exceptions.ContentTypeError:
+                await ctx.send("This isn't a valid xkcd comic!")
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
