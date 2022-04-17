@@ -3,6 +3,7 @@ import discord
 import secrets
 import asyncio
 import aiohttp
+import pyston
 
 from io import BytesIO
 from discord.ext import commands
@@ -12,6 +13,7 @@ from typing import Optional
 
 class Fun(commands.Cog):
     def __init__(self, bot):
+        self.client = pyston.PystonClient()
         self.bot = bot
 
     @commands.command(aliases=["8ball"])
@@ -221,6 +223,25 @@ class Fun(commands.Cog):
             except aiohttp.client_exceptions.ContentTypeError:
                 await ctx.send("This isn't a valid xkcd comic!")
 
+
+    @commands.command()
+    async def compile(self, ctx: commands.Context, lang: str, *, stmt: str = None):
+        try:
+            attachment = ctx.message.attachments[0].url
+            async with http.get(attachment) as data:
+                stmt = await data.text()
+        except IndexError:
+            if stmt is None:
+                await ctx.send("You need to supply a file or statement to compile code!")
+                return
+        if stmt.startswith("```"):
+            stmt = "".join(stmt.split("\n")[1:-1])
+        elif stmt.startswith("`"):
+            stmt = "".join(stmt.split("`")[1:-1])
+
+        output = await self.client.execute(lang, [pyston.File(stmt)])
+        embed = discord.Embed(title="Compiler", description=output)
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Fun(bot))
