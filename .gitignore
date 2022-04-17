@@ -5,6 +5,8 @@ config/*.yml
 bot.env
 dev/mongo_data/*
 !dev/mongo_data/.keep
+logs/*
+!logs/.keep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -34,6 +34,7 @@ for cog in cogs:
 async def on_ready():
     print("Bot ready")
     await init_beanie()
+    init_logger()
 
 
 try:
