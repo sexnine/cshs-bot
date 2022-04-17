@@ -4,7 +4,6 @@ import secrets
 import asyncio
 import aiohttp
 import pyston
-import typing
 
 from io import BytesIO
 from discord.ext import commands
