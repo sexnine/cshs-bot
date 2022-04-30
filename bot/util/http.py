@@ -70,13 +70,8 @@ class _Session(aiohttp.ClientSession):
         if not self.closed:
             _loop.run_until_complete(self.close())
 
-
-class Session:
-    def __new__(cls, *args, **kwargs):
-        return _Session()
-
-
-session = Session()
+            
+http = _Session()
 
 
 @async_cache()
