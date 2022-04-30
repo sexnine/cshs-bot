@@ -1,4 +1,5 @@
 import aiohttp
+import asyncio
 
 from functools import wraps
 
@@ -61,22 +62,23 @@ def async_cache(maxsize=128):
     return decorator
 
 
-# Removes the aiohttp ClientSession instance warning.
-class HTTPSession(aiohttp.ClientSession):
-    """ Abstract class for aiohttp. """
+_loop = asyncio.get_event_loop()
+
+
+class _Session:
+    def __init__(self):
+        self.session = _loop.run_until_complete(self._get_session())
+
+    async def _get_session(self):
+        return aiohttp.ClientSession()
 
     def __del__(self):
-        """
-        Closes the ClientSession instance
-        cleanly when the instance is deleted.
-        Useful for things like when the interpreter closes.
-        This would be perfect if discord.py had this as well. :thinking:
-        """
-        if not self.closed:
-            self.close()
+        if not self.session.closed:
+            _loop.run_until_complete(self.session.close())
 
 
-session = HTTPSession()
+_session_instance = _Session()
+http = _session_instance.session
 
 
 @async_cache()
