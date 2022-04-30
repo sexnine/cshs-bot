@@ -71,11 +71,12 @@ class _Session(aiohttp.ClientSession):
             _loop.run_until_complete(self.close())
 
 
-async def generate_session():
-    return _Session()
+class Session:
+    def __new__(cls, *args, **kwargs):
+        return _Session()
 
 
-session = _loop.run_until_complete(generate_session())
+session = Session()
 
 
 @async_cache()
