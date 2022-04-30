@@ -65,13 +65,20 @@ def async_cache(maxsize=128):
 _loop = asyncio.get_event_loop()
 
 
-class _Session(aiohttp.ClientSession):
-    def __del__(self):
-        if not self.closed:
-            _loop.run_until_complete(self.close())
+class _Session:
+    def __init__(self):
+        self.session = _loop.run_until_complete(self._get_session())
 
-            
-http = _Session()
+    async def _get_session(self):
+        return aiohttp.ClientSession()
+
+    def __del__(self):
+        if not self.session.closed:
+            _loop.run_until_complete(self.session.close())
+
+
+_session_instance = _Session()
+http = _session_instance.session
 
 
 @async_cache()
