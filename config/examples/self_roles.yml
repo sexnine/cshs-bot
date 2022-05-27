@@ -16,6 +16,7 @@ assignable_roles:
     default_emoji: "🛠"
     single_value: false
     none_option: true
+    display_role: 979884488203075644
     roles:
       '884417205234720818':
         label: Test Assignable role
