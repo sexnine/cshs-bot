@@ -32,9 +32,10 @@ class SelfRoles(commands.Cog):
                 if role_id in user_role_ids:
                     await user.remove_roles(user.guild.get_role(role_id))
 
-        async def process_response(i: discord.Interaction, roles: dict):
+        async def process_response(i: discord.Interaction, roles_data: dict):
             user = i.user
             user_selection = i.data.get("values")
+            roles = roles_data.get("roles")
 
             apply_roles = []
             remove_roles = []
@@ -43,6 +44,13 @@ class SelfRoles(commands.Cog):
                     apply_roles.append(int(role_id))
                 else:
                     remove_roles.append(int(role_id))
+
+            display_role = roles_data.get("display_role")
+            if display_role:
+                if apply_roles:
+                    apply_roles.append(display_role)
+                else:
+                    remove_roles.append(display_role)
 
             await apply_remove_roles(user, apply_roles, remove_roles)
             await i.response.pong()
@@ -84,7 +92,7 @@ class SelfRoles(commands.Cog):
                     await process_response(inter, ri)
                 return cb
 
-            select.callback = await gen_callback(self.config.data.get("assignable_roles").get(role_type).get("roles"))
+            select.callback = await gen_callback(self.config.data.get("assignable_roles").get(role_type))
             selects.append(select)
 
         for select_obj in selects:
